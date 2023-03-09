@@ -6,15 +6,16 @@ const connection = require("../Database/connection.js")
 const routes = Router();
 
 routes.post('/login',  (req, res) => {
-    const {username, password}= req.body;
-    console.log(password);
-    Login(username, password);
+    const {CPF, password}= req.body;
+    Login(CPF, password);
       
-    function Login(username, password) {
+    function Login(CPF, password) {
        
         // verificar se o usuário existe no banco de dados
-        if (username === 'usuario' && password === 'senha') {
+        if (CPF === '14102198601' && password === 'senha') {
           console.log('Login bem sucedido!');
+          const user = connection("User")
+          console.log(user)
          {
             
           }
@@ -23,7 +24,7 @@ routes.post('/login',  (req, res) => {
           console.log('Nome de usuário ou senha incorretos.');
           res.json({
             message:"Falha no login",
-            user: username,
+            user: CPF,
             pass: password
         })
         }
@@ -32,14 +33,23 @@ routes.post('/login',  (req, res) => {
       
   });
 routes.post('/signup', async (req, res) => {
-  const {CPF, name, lastName,accountType, pontuacao } = req.body;
-  console.log(CPF)
+  const {CPF, name, lastName,accountType, pontuacao, password } = req.body;
+
+  connection("User").select("CPF").where("CPF", "14102198601").then(rows => {
+    console.log(rows);
+  })
+
   const user = await connection("User").insert({
-    CPF, name, lastName,accountType, pontuacao
-  });
+    CPF, name, lastName,accountType, pontuacao, password
+  }).then(() => console.log('Usuário inserido com sucesso!'))
+  .catch((err) => console.error(err))
+  
+ 
+
+  connection.destroy;
 
   
-  res.send(user.CPF)
+  res.send("Ok")
 }
 
 );

@@ -6,10 +6,12 @@ exports.up = function(knex) {
     return knex.schema.createTable("User", (table) => {
         table.string('CPF').primary();
         table.string('name').notNullable();
+        table.string('password').notNullable();
         table.string('lastName').notNullable();
         table.string('accountType').notNullable();
         table.string('pontuacao').notNullable();
-        table.string('professorID')
+        table.string('professorID');
+
 
     })
   
