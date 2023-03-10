@@ -245,5 +245,33 @@ routes.post('/cadastrarPergunta', async (req, res) => {
 
 });
 
+routes.post('/responderPergunta', async (req, res)=> {
+  const {perguntaId, respostaEscolhida, alunoId, professorId} = req.body;
+try {
+  const newLogPergunta = connection('PerguntasRespondidas').insert({
+    perguntaId,
+    respostaEscolhida ,
+    alunoId,
+    professorId,
+    }).then(() => console.log('Log de resposta cadastrado com sucesso!'))
+ .catch((err) => console.error(err))
+ const respostaSearch = await connection("PerguntasRespondidas").select("*").where("pergunta", pergunta).first();
+
+  res.json({
+
+  pergunta: ,
+
+})
+
+ connection.destroy;
+} catch (error) {
+  res.json({message: "Error"})
+  console.log(error)
+}
+
+
+});
+
+
 
 module.exports= routes
