@@ -10,7 +10,7 @@ exports.up = function(knex) {
         table.string('professorID').notNullable();
 
         table.foreign('categoriaID').references('id').inTable('Categoria');
-        table.foreign('professorID').references('id').inTable('User');
+        table.foreign('professorID').references('cpf').inTable('User');
 
     })
 };

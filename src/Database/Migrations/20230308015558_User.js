@@ -11,6 +11,9 @@ exports.up = function(knex) {
         table.string('tipoDeConta').notNullable();
         table.string('pontuacao').notNullable();
         table.string('professorID');
+        
+
+        
 
 
     })

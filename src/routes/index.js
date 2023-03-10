@@ -21,6 +21,24 @@ try {
   
 }
 
+});
+routes.get('/categoria', async (req, res) => {
+  const {nomeDaCategoria  , professorId} = req.body;
+
+try {
+  const newCategoriaDB = await connection("Categoria").select("*").where({"categoria": nomeDaCategoria, "professorID": professorId}).first();
+  
+  res.json({
+   categoria: newCategoriaDB
+  })
+
+} catch (error) {
+  console.log(error)
+  res.json({
+    message: "Error"
+  })
+  
+}
 
 });
 
@@ -78,7 +96,7 @@ routes.post('/signup', async (req, res) => {
 });
 
 routes.post('/cadastrarCategoria', async (req, res) => {
-  const {categoria} = req.body;
+  const {categoria, professorId} = req.body;
 
   const categoriaDB = await connection("Categoria").select("*").where("categoria", categoria).first();
   if(categoriaDB){
@@ -87,13 +105,17 @@ routes.post('/cadastrarCategoria', async (req, res) => {
     })
   }else{
     const newCategoria = await connection("Categoria").insert({
-      categoria
+      categoria,
+      professorId
     }).then(() => console.log('Categoria inserida com sucesso!'))
     .catch((err) => console.error(err))
     const categoriaSearch = await connection("Categoria").select("*").where("categoria", categoria).first();
     res.json({
       message: "Categoria inserida com sucesso",
-      id: categoriaSearch.id
+      id: categoriaSearch.id,
+      categoria,
+      professorId
+
     })
   }
   connection.destroy;

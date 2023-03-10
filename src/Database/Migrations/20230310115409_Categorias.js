@@ -6,6 +6,9 @@ exports.up = function(knex) {
     return knex.schema.createTable("Categoria", (table) => {
         table.increments('id');
         table.string('categoria').notNullable();
+        table.string('professorId').notNullable();
+
+        table.foreign('professorId').references('cpf').inTable('User');
   
     })
     
