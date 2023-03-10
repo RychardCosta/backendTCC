@@ -4,28 +4,48 @@ const connection = require("../Database/connection.js")
 
 
 const routes = Router();
+routes.get('/user', async (req, res) => {
+  const {userId} = req.body;
+try {
+  const user = await connection("User").select("*").where("cpf", userId).first();
+  const {cpf, nome, sobrenome, tipoDeConta, pontuacao, professorID } = user;
+  res.json({
+    cpf, nome, sobrenome, tipoDeConta, pontuacao, professorID
+  })
 
-routes.post('/login',  (req, res) => {
-    const {CPF, password}= req.body;
-    Login(CPF, password);
-      
-    function Login(CPF, password) {
+} catch (error) {
+  console.log(error)
+  res.json({
+    message: "Error"
+  })
+  
+}
+
+
+});
+
+routes.post('/login', async  (req, res) => {
+    const {cpf, senha}= req.body;
+    console.log(cpf)
+    const user = await connection("User").select("*").where("cpf", cpf).first();
+      console.log("DB", user.cpf)
+    console.log(user)
+  
+    Login(cpf, senha);
+    connection.destroy;
+    function Login(cpf, senha) {
        
         // verificar se o usuário existe no banco de dados
-        if (CPF === '14102198601' && password === 'senha') {
+        if (cpf === user.cpf && senha === user.senha) {
           console.log('Login bem sucedido!');
-          const user = connection("User")
-          console.log(user)
-         {
-            
-          }
+                       
           res.json({message:"Ok"})
         } else {
           console.log('Nome de usuário ou senha incorretos.');
           res.json({
             message:"Falha no login",
-            user: CPF,
-            pass: password
+            user: cpf,
+            pass: senha
         })
         }
       }
@@ -33,26 +53,54 @@ routes.post('/login',  (req, res) => {
       
   });
 routes.post('/signup', async (req, res) => {
-  const {CPF, name, lastName,accountType, pontuacao, password } = req.body;
+  const {cpf, nome, sobrenome,tipoDeConta, pontuacao, senha } = req.body;
 
-  connection("User").select("CPF").where("CPF", "14102198601").then(rows => {
-    console.log(rows);
-  })
+  const user = await connection("User").select("*").where("cpf", cpf).first();
+  if(user){
+    res.send("Usuário já cadastrado!")
+  }else{
+    const newUser = await connection("User").insert({
+     cpf, nome, sobrenome,tipoDeConta, pontuacao, senha
+    }).then(() => console.log('Usuário inserido com sucesso!'))
+    .catch((err) => {
+      console.error(err)
+      res.json({
+        message: "Verifique o CPF"
+      })})
 
-  const user = await connection("User").insert({
-    CPF, name, lastName,accountType, pontuacao, password
-  }).then(() => console.log('Usuário inserido com sucesso!'))
-  .catch((err) => console.error(err))
-  
+    res.json({
+      message: "Usuário inserido com sucesso"
+    })
+  }
+  connection.destroy;
  
 
+});
+
+routes.post('/cadastrarCategoria', async (req, res) => {
+  const {categoria} = req.body;
+
+  const categoriaDB = await connection("Categoria").select("*").where("categoria", categoria).first();
+  if(categoriaDB){
+    res.json({
+      message: "Categoria já cadastrado!"
+    })
+  }else{
+    const newCategoria = await connection("Categoria").insert({
+      categoria
+    }).then(() => console.log('Categoria inserida com sucesso!'))
+    .catch((err) => console.error(err))
+    const categoriaSearch = await connection("Categoria").select("*").where("categoria", categoria).first();
+    res.json({
+      message: "Categoria inserida com sucesso",
+      id: categoriaSearch.id
+    })
+  }
   connection.destroy;
+ 
 
-  
-  res.send("Ok")
-}
+});
 
-);
 
 
 module.exports= routes
