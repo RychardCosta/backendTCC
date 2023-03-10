@@ -3,9 +3,14 @@
  * @returns { Promise<void> }
  */
 exports.up = function(knex) {
-    return knex.schema.createTable("Pegunta", (table) => {
+    return knex.schema.createTable("Pergunta", (table) => {
         table.increments('id');
         table.string('pergunta').notNullable();
+        table.string('opcao1').notNullable();
+        table.string('opcao2').notNullable();
+        table.string('opcao3').notNullable();
+        table.string('opcao4').notNullable();
+        table.string('resposta').notNullable();
         table.string('categoriaID').notNullable();
         table.string('professorID').notNullable();
 

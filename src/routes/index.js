@@ -16,7 +16,7 @@ try {
 } catch (error) {
   console.log(error)
   res.json({
-    message: "Error"
+    message: "Usuário não encontrado."
   })
   
 }
@@ -35,39 +35,74 @@ try {
 } catch (error) {
   console.log(error)
   res.json({
-    message: "Error"
+    message: "Categoria não encontrada"
   })
   
 }
 
 });
+routes.get('/pergunta', async (req, res)=> {
+  const {id, professorId} = req.body;
+
+  try {
+    if(id){
+      const perguntaSearch = await connection("Pergunta").select("*").where({"id": id, "professorId": professorId});
+      res.json({
+          pergunta: perguntaSearch
+        });
+
+    }else{
+      const perguntaSearch = await connection("Pergunta").select("*").where("professorId", professorId);
+      res.json({
+          pergunta: perguntaSearch
+        });
+
+    }
+
+ 
+  } catch (error) {
+    res.json({
+        message: "Nenhuma pergunta encontrada"
+      });
+  }
+
+});
+
+
+
+
 
 routes.post('/login', async  (req, res) => {
     const {cpf, senha}= req.body;
-    console.log(cpf)
-    const user = await connection("User").select("*").where("cpf", cpf).first();
-      console.log("DB", user.cpf)
-    console.log(user)
+   
+    try {
+      const user = await connection("User").select("*").where("cpf", cpf).first();
+     
   
     Login(cpf, senha);
     connection.destroy;
     function Login(cpf, senha) {
        
-        // verificar se o usuário existe no banco de dados
-        if (cpf === user.cpf && senha === user.senha) {
-          console.log('Login bem sucedido!');
-                       
-          res.json({message:"Ok"})
+   
+        if (cpf === user.cpf && senha === user.senha) {                      
+          res.json({message:"Login feito com sucesso!"})
         } else {
           console.log('Nome de usuário ou senha incorretos.');
           res.json({
-            message:"Falha no login",
+            message:"Nome de usuário ou senha incorretos.",
             user: cpf,
             pass: senha
         })
         }
       }
 
+    } catch (error) {
+      res.json({
+        message:"Nome de usuário ou senha incorretos.",
+            user: cpf,
+            pass: senha
+      })
+    }
       
   });
 routes.post('/signup', async (req, res) => {
@@ -75,19 +110,22 @@ routes.post('/signup', async (req, res) => {
 
   const user = await connection("User").select("*").where("cpf", cpf).first();
   if(user){
-    res.send("Usuário já cadastrado!")
+    res.json({
+      message: "Usuário já cadastrado!"})
   }else{
     const newUser = await connection("User").insert({
      cpf, nome, sobrenome,tipoDeConta, pontuacao, senha
-    }).then(() => console.log('Usuário inserido com sucesso!'))
+    }).then(() => console.log('Usuário cadastrado com sucesso!'))
     .catch((err) => {
       console.error(err)
       res.json({
         message: "Verifique o CPF"
       })})
-
+      
     res.json({
-      message: "Usuário inserido com sucesso"
+      message: "Usuário criado com sucesso",
+      cpf, nome, sobrenome,tipoDeConta, pontuacao
+
     })
   }
   connection.destroy;
@@ -98,7 +136,8 @@ routes.post('/signup', async (req, res) => {
 routes.post('/cadastrarCategoria', async (req, res) => {
   const {categoria, professorId} = req.body;
 
-  const categoriaDB = await connection("Categoria").select("*").where("categoria", categoria).first();
+  try {
+    const categoriaDB = await connection("Categoria").select("*").where("categoria", categoria).first();
   if(categoriaDB){
     res.json({
       message: "Categoria já cadastrado!"
@@ -111,7 +150,7 @@ routes.post('/cadastrarCategoria', async (req, res) => {
     .catch((err) => console.error(err))
     const categoriaSearch = await connection("Categoria").select("*").where("categoria", categoria).first();
     res.json({
-      message: "Categoria inserida com sucesso",
+      message: "Categoria criado com sucesso",
       id: categoriaSearch.id,
       categoria,
       professorId
@@ -119,10 +158,59 @@ routes.post('/cadastrarCategoria', async (req, res) => {
     })
   }
   connection.destroy;
+    
+  } catch (error) {
+    res.json({
+      message: "Error"
+    })
+    
+  }
  
 
 });
 
+routes.post('/cadastrarPergunta', async (req, res) => {
+  const {pergunta, resposta,categoriaId, professorId, opcao1, opcao2, opcao3, opcao4} = req.body;
+      
+  try {
+    const perguntaDB = await connection("Pergunta").select("*").where("pergunta", pergunta).first();
+    if(perguntaDB){
+      res.json({
+        message: "Pergunta ja cadastrada"
+      })
+    
+  }else{
+    const newPergunta = connection('Pergunta').insert({
+       pergunta,
+       resposta ,
+       categoriaId,
+       professorId,
+       opcao1, 
+       opcao2, 
+       opcao3, 
+       opcao4
+    }).then(() => console.log('Categoria cadastrado com sucesso!'))
+    .catch((err) => console.error(err))
+    const perguntaSearch = await connection("Pergunta").select("*").where("pergunta", pergunta).first();
+
+    
+    res.json({
+      pergunta: perguntaSearch,
+    
+    })
+    connection.destroy;
+
+  }
+
+  } catch (error) {
+    console.log(error)
+    res.json({
+      message: "Error"
+    })
+    
+  }
+
+});
 
 
 module.exports= routes
