@@ -12,10 +12,10 @@ exports.up = function(knex) {
         table.string('opcao4').notNullable();
         table.string('resposta').notNullable();
         table.string('categoriaID').notNullable();
-        table.string('professorID').notNullable();
+        table.string('professorId').notNullable();
 
         table.foreign('categoriaID').references('id').inTable('Categoria');
-        table.foreign('professorID').references('cpf').inTable('User');
+        table.foreign('professorId').references('cpf').inTable('User');
 
     })
 };

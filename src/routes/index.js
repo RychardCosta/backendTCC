@@ -5,13 +5,17 @@ const connection = require("../Database/connection.js")
 
 const routes = Router();
 routes.get('/user', async (req, res) => {
-  const {userId} = req.body;
+  const {userId } = req.body;
 try {
   const user = await connection("User").select("*").where("cpf", userId).first();
-  const {cpf, nome, sobrenome, tipoDeConta, pontuacao, professorID } = user;
+  const {cpf, nome, sobrenome, tipoDeConta, pontuacao, professorId } = user;
+  const alunoSearch = await connection("User").select("cpf", "nome", "sobrenome", "tipoDeConta", "pontuacao", "professorId").where("professorId", userId);
   res.json({
-    cpf, nome, sobrenome, tipoDeConta, pontuacao, professorID
-  })
+      Usuario: {
+      cpf, nome, sobrenome, tipoDeConta, pontuacao, professorId},
+      alunos: alunoSearch
+    })
+
 
 } catch (error) {
   console.log(error)
@@ -26,12 +30,23 @@ routes.get('/categoria', async (req, res) => {
   const {nomeDaCategoria  , professorId} = req.body;
 
 try {
-  const newCategoriaDB = await connection("Categoria").select("*").where({"categoria": nomeDaCategoria, "professorID": professorId}).first();
+  if(nomeDaCategoria){
+    const newCategoriaDB = await connection("Categoria").select("*").where({"categoria": nomeDaCategoria, "professorId": professorId}).first();
   
   res.json({
    categoria: newCategoriaDB
   })
 
+
+  }else{
+    const newCategoriaDB = await connection("Categoria").select("*").where({"professorId": professorId});
+  
+  res.json({
+   categoria: newCategoriaDB
+  })
+
+
+  }
 } catch (error) {
   console.log(error)
   res.json({
@@ -42,7 +57,7 @@ try {
 
 });
 routes.get('/pergunta', async (req, res)=> {
-  const {id, professorId} = req.body;
+  const {id} = req.body;
 
   try {
     if(id){
@@ -106,27 +121,45 @@ routes.post('/login', async  (req, res) => {
       
   });
 routes.post('/signup', async (req, res) => {
-  const {cpf, nome, sobrenome,tipoDeConta, pontuacao, senha } = req.body;
+  const {cpf, nome, sobrenome,tipoDeConta, pontuacao, senha, professorId } = req.body;
 
   const user = await connection("User").select("*").where("cpf", cpf).first();
   if(user){
     res.json({
       message: "Usuário já cadastrado!"})
   }else{
-    const newUser = await connection("User").insert({
-     cpf, nome, sobrenome,tipoDeConta, pontuacao, senha
-    }).then(() => console.log('Usuário cadastrado com sucesso!'))
-    .catch((err) => {
-      console.error(err)
-      res.json({
-        message: "Verifique o CPF"
-      })})
-      
-    res.json({
-      message: "Usuário criado com sucesso",
-      cpf, nome, sobrenome,tipoDeConta, pontuacao
-
-    })
+    if(professorId){
+      const newUser = await connection("User").insert({
+        cpf, nome, sobrenome,tipoDeConta, pontuacao, senha, professorId
+       }).then(() => console.log('Usuário cadastrado com sucesso!'))
+       .catch((err) => {
+         console.error(err)
+         res.json({
+           message: "Verifique o CPF"
+         })})
+         
+       res.json({
+         message: "Usuário criado com sucesso",
+         cpf, nome, sobrenome,tipoDeConta, pontuacao, professorId
+   
+       })
+    }else {
+      const newUser = await connection("User").insert({
+        cpf, nome, sobrenome,tipoDeConta, pontuacao, senha
+       }).then(() => console.log('Usuário cadastrado com sucesso!'))
+       .catch((err) => {
+         console.error(err)
+         res.json({
+           message: "Verifique o CPF"
+         })})
+         
+       res.json({
+         message: "Usuário criado com sucesso",
+         cpf, nome, sobrenome,tipoDeConta, pontuacao
+   
+       })
+    }
+    
   }
   connection.destroy;
  

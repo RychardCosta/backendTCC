@@ -10,7 +10,10 @@ exports.up = function(knex) {
         table.string('senha').notNullable();
         table.string('tipoDeConta').notNullable();
         table.string('pontuacao').notNullable();
-        table.string('professorID');
+        table.string('professorId');
+
+
+        table.foreign('professorID').references('cpf').inTable('User');
         
 
         
