@@ -9,7 +9,7 @@ exports.up = function(knex) {
         table.string('sobrenome').notNullable();
         table.string('senha').notNullable();
         table.string('tipoDeConta').notNullable();
-        table.string('pontuacao').notNullable();
+        table.integer("pontuacao").defaultTo(0);
         table.string('professorId');
 
 

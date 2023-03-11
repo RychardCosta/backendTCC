@@ -63,7 +63,7 @@ module.exports = {
 
       }},
       async create(req, res)  {
-        const {cpf, nome, sobrenome,tipoDeConta, pontuacao, senha, professorId } = req.body;
+        const {cpf, nome, sobrenome,tipoDeConta, senha, professorId } = req.body;
       
         const user = await connection("User").select("*").where("cpf", cpf).first();
         if(user){
@@ -72,7 +72,7 @@ module.exports = {
         }else{
           if(professorId){
             const newUser = await connection("User").insert({
-              cpf, nome, sobrenome,tipoDeConta, pontuacao, senha, professorId
+              cpf, nome, sobrenome,tipoDeConta, senha, professorId
              }).then(() => console.log('Usuário cadastrado com sucesso!'))
              .catch((err) => {
                console.error(err)
@@ -82,12 +82,14 @@ module.exports = {
                
              res.json({
                message: "Usuário criado com sucesso",
-               cpf, nome, sobrenome,tipoDeConta, pontuacao, professorId
+               user: {
+                 cpf, nome, sobrenome,tipoDeConta, professorId
+                }
          
              })
           }else {
             const newUser = await connection("User").insert({
-              cpf, nome, sobrenome,tipoDeConta, pontuacao, senha
+              cpf, nome, sobrenome,tipoDeConta, senha
              }).then(() => console.log('Usuário cadastrado com sucesso!'))
              .catch((err) => {
                console.error(err)
@@ -97,7 +99,10 @@ module.exports = {
                
              res.json({
                message: "Usuário criado com sucesso",
-               cpf, nome, sobrenome,tipoDeConta, pontuacao
+               user:{
+                 cpf, nome, sobrenome,tipoDeConta
+               }
+
          
              })
           }
