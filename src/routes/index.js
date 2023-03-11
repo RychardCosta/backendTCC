@@ -99,8 +99,15 @@ routes.post('/login', async  (req, res) => {
     function Login(cpf, senha) {
        
    
-        if (cpf === user.cpf && senha === user.senha) {                      
-          res.json({message:"Login feito com sucesso!"})
+        if (cpf === user.cpf && senha === user.senha) {
+          const {cpf, nome, sobrenome, tipoDeConta, professorId, pontuacao} = user;                      
+          res.json({
+            message:"Login feito com sucesso!",
+            user: {
+              cpf, nome, sobrenome, tipoDeConta, professorId, pontuacao
+            }
+          })
+          
         } else {
           console.log('Nome de usuário ou senha incorretos.');
           res.json({
@@ -135,7 +142,7 @@ routes.post('/signup', async (req, res) => {
        .catch((err) => {
          console.error(err)
          res.json({
-           message: "Verifique o CPF"
+           message: "Verifique os dados"
          })})
          
        res.json({
@@ -255,11 +262,11 @@ try {
     professorId,
     }).then(() => console.log('Log de resposta cadastrado com sucesso!'))
  .catch((err) => console.error(err))
- const respostaSearch = await connection("PerguntasRespondidas").select("*").where("pergunta", pergunta).first();
+ const respostaSearch = await connection("PerguntasRespondidas").select("*").where(alunoId, perguntaId).first();
 
   res.json({
 
-  pergunta: ,
+  pergunta: respostaSearch
 
 })
 
