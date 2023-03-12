@@ -1,3 +1,4 @@
+const e = require("express");
 const connection = require("../Database/connection.js")
 
 module.exports = {
@@ -113,8 +114,34 @@ module.exports = {
         connection.destroy;
        
       
-      }
+      },
+      async pontuar(req, res){
+        const {id } = req.params;
+        const {pontuacao} = req.body
       
+        const user = await connection("User").select("*").where("cpf", id).first();
+        if(!user){
+          res.json({
+            message: "Usuário nçao encontrado!"})
+        }else{
+          try {
+            await connection("User").update("pontuacao",  user.pontuacao+pontuacao ).where("cpf", id);
+            res.json({
+              message: "Atualizado com sucesso"
+            })
+            
+          } catch (error) {
+            console.log(error)
+            res.json({
+              message: "Erro ao atualizar."
+            })
+          }
+         
+          
+        }
+        connection.destroy;
+
+      }
 
 }
 

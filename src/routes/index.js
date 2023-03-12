@@ -20,6 +20,8 @@ routes.post('/categoria', Categoria.create);
 routes.post('/pergunta', Pergunta.create);
 routes.post('/responderPergunta', Pergunta.responderPergunta);
 
+routes.put('/user/pontuar/:id', User.pontuar)
+
 
 
 module.exports= routes
