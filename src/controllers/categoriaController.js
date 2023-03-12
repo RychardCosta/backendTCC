@@ -4,7 +4,7 @@ module.exports = {
     async create(req, res) {
         const {categoria, professorId} = req.body;  
         try {
-          const categoriaDB = await connection("Categoria").select("*").where("categoria", categoria).first();
+          const categoriaDB = await connection("Categoria").select("*").where({"categoria": categoria,"professorId": professorId}).first();
         if(categoriaDB){
           res.json({
             message: "Categoria já cadastrado!"
@@ -33,7 +33,7 @@ module.exports = {
         }      
       },
       async index(req, res) {
-        const {nomeDaCategoria  , professorId} = req.body;
+        const {nomeDaCategoria  , professorId} = req.query;
       
       try {
         if(nomeDaCategoria){

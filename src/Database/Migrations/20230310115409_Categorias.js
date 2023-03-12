@@ -8,7 +8,7 @@ exports.up = function(knex) {
         table.string('categoria').notNullable();
         table.string('professorId').notNullable();
 
-        table.foreign('professorId').references('cpf').inTable('User');
+        table.foreign('professorId').references('cpf').inTable('User').onDelete("CASCADE");
   
     })
     

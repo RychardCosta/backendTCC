@@ -6,7 +6,7 @@ module.exports = {
         const {pergunta, resposta,categoriaId, professorId, opcao1, opcao2, opcao3, opcao4} = req.body;
             
         try {
-          const perguntaDB = await connection("Pergunta").select("*").where("pergunta", pergunta).first();
+          const perguntaDB = await connection("Pergunta").select("*").where({"pergunta":pergunta, "professorId": professorId}).first();
           if(perguntaDB){
             res.json({
               message: "Pergunta ja cadastrada"
@@ -22,12 +22,13 @@ module.exports = {
              opcao2, 
              opcao3, 
              opcao4
-          }).then(() => console.log('Categoria cadastrado com sucesso!'))
+          }).then(() => console.log('Pergunta cadastrado com sucesso!'))
           .catch((err) => console.error(err))
           const perguntaSearch = await connection("Pergunta").select("*").where("pergunta", pergunta).first();
       
           
           res.json({
+            message: "Pergunta cadastrada com sucesso!",
             pergunta: perguntaSearch,
           
           })
@@ -45,7 +46,10 @@ module.exports = {
       
       },
       async index(req, res) {
-        const {id} = req.body;
+        const {professorId} = req.params;
+        const {id} = req.query;
+        console.log(professorId)
+        console.log(id)
       
         try {
           if(id){

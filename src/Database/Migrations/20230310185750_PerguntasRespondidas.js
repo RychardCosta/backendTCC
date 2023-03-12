@@ -10,9 +10,9 @@ exports.up = function(knex) {
         table.string('alunoId').notNullable();
         table.string('professorId').notNullable();
        
-        table.foreign('perguntaId').references('id').inTable('Pergunta');
-        table.foreign('alunoId').references('cpf').inTable('User');
-        table.foreign('professorId').references('professorId').inTable('User');
+        table.foreign('perguntaId').references('id').inTable('Pergunta').onDelete("CASCADE");
+        table.foreign('alunoId').references('cpf').inTable('User').onDelete("CASCADE");
+        table.foreign('professorId').references('professorId').inTable('User').onDelete("CASCADE");
 
     })
 };

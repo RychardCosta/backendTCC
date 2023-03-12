@@ -8,16 +8,16 @@ const Pergunta = require("../controllers/perguntaController");
 
 
 const routes = Router();
-routes.get('/user', User.index)
+routes.get('/user/:userId', User.index)
   
 
-routes.get('/categoria', Categoria.index);
-routes.get('/pergunta', Pergunta.index);
+routes.get('/categoria/', Categoria.index);
+routes.get('/pergunta/:professorId', Pergunta.index);
 
 routes.post('/login', User.login);
 routes.post('/signup', User.create);
-routes.post('/cadastrarCategoria', Categoria.create);
-routes.post('/cadastrarPergunta', Pergunta.create);
+routes.post('/categoria', Categoria.create);
+routes.post('/pergunta', Pergunta.create);
 routes.post('/responderPergunta', Pergunta.responderPergunta);
 
 

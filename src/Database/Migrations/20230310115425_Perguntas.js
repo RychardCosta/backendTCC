@@ -14,8 +14,8 @@ exports.up = function(knex) {
         table.string('categoriaID').notNullable();
         table.string('professorId').notNullable();
 
-        table.foreign('categoriaID').references('id').inTable('Categoria');
-        table.foreign('professorId').references('cpf').inTable('User');
+        table.foreign('categoriaID').references('id').inTable('Categoria').onDelete("CASCADE");
+        table.foreign('professorId').references('cpf').inTable('User').onDelete("CASCADE");
 
     })
 };

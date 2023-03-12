@@ -42,7 +42,9 @@ module.exports = {
         }        
       },
       async index(req, res) {
-        const {userId } = req.body;
+        const {userId } = req.params;
+        
+      
         try {
             const user = await connection("User").select("*").where("cpf", userId).first();
             const {cpf, nome, sobrenome, tipoDeConta, pontuacao, professorId } = user;
@@ -53,8 +55,8 @@ module.exports = {
                 alunos: alunoSearch
               })
           
-          
-          }catch{
+              
+          }catch(error){
             console.log(error)
             res.json({
             message: "Usuário não encontrado."
