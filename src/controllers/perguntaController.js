@@ -154,10 +154,10 @@ module.exports = {
             arrayId.push(pergunta.perguntaId)
            
           }
-          const search = await connection("Pergunta").select("*").whereNotIn("id", arrayId)
+          const searchPerguntasFiltradas = await connection("Pergunta").select("*").whereNotIn("id", arrayId)
 
 
-          res.json({message: "Perguntas geradas com sucesso", perguntas:search})        
+          res.json({message: "Perguntas geradas com sucesso", perguntas:shuffleArray(searchPerguntasFiltradas)})        
         }else{
           const perguntas = await connection("Pergunta").select("*").where({professorId});
           
