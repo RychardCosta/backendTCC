@@ -78,33 +78,48 @@ module.exports = {
         const {perguntaId} = req.params;
         const {respostaEscolhida, alunoId} = req.body;
         try {
-        const perguntaSearch = await connection("Pergunta").select("*").where("id",perguntaId );
+        const perguntaSearch = await connection("Pergunta").select("*").where("id",perguntaId ).first();
         const user = await connection("User").select("*").where("cpf", alunoId).first();
+       
+
           if(!user){
           res.json({
             message: "Usuário não encontrado!"})
         }else{
+      
           if(respostaEscolhida === perguntaSearch.resposta){
+            console.log(respostaEscolhida)
+            console.log(perguntaSearch.resposta)
              await connection('PerguntasRespondidas').insert({
               perguntaId,
               respostaEscolhida,
               alunoId,
-              "professorId": alunoId.professorId,
+              "professorId": user.professorId,
               "pontosObtidos": perguntaSearch.valorDaPontuacao
   
               }).then(() => console.log('Log de resposta cadastrado com sucesso!'))
            .catch((err) => console.error(err))
           
-            await connection("User").update("pontuacao",  user.pontuacao+ perguntaSearch.valorDaPontuacao).where("cpf", id).then(() => console.log('Pontuação registrada com sucesso!'))
+            await connection("User").update("pontuacao",  user.pontuacao + perguntaSearch.valorDaPontuacao).where("cpf", user.cpf).then(() => console.log('Pontuação registrada com sucesso!'))
             .catch((err) => console.error(err));
-            const respostaSearch = await connection("PerguntasRespondidas").select("*").where(alunoId, perguntaId).first();
+            const respostaSearch = await connection("PerguntasRespondidas").select("*").where({alunoId, perguntaId}).first();
+
+
+
             res.json({
-              message: "Atualizado com sucesso.",
+              message: "Resposta certa!",
               resposta:respostaSearch
 
             
             })
-          } 
+          } else{
+            res.json({
+              message: "Resposta errada!."
+
+            
+            })
+
+          }
 
         }
          connection.destroy;
