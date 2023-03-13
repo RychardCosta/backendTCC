@@ -75,29 +75,43 @@ module.exports = {
       
       },
       async responderPergunta(req, res) {
-        const {perguntaId, respostaEscolhida, alunoId, professorId} = req.body;
-      try {
-        const newLogPergunta = connection('PerguntasRespondidas').insert({
-          perguntaId,
-          respostaEscolhida ,
-          alunoId,
-          professorId,
-          }).then(() => console.log('Log de resposta cadastrado com sucesso!'))
-       .catch((err) => console.error(err))
-       const respostaSearch = await connection("PerguntasRespondidas").select("*").where(alunoId, perguntaId).first();
-      
-        res.json({
-      
-        pergunta: respostaSearch
-      
-      })
-      
-       connection.destroy;
+        const {perguntaId} = req.params;
+        const {respostaEscolhida, alunoId} = req.body;
+        try {
+        const perguntaSearch = await connection("Pergunta").select("*").where("id",perguntaId );
+        const user = await connection("User").select("*").where("cpf", alunoId).first();
+          if(!user){
+          res.json({
+            message: "Usuário não encontrado!"})
+        }else{
+          if(respostaEscolhida === perguntaSearch.resposta){
+             await connection('PerguntasRespondidas').insert({
+              perguntaId,
+              respostaEscolhida,
+              alunoId,
+              "professorId": alunoId.professorId,
+              "pontosObtidos": perguntaSearch.valorDaPontuacao
+  
+              }).then(() => console.log('Log de resposta cadastrado com sucesso!'))
+           .catch((err) => console.error(err))
+          
+            await connection("User").update("pontuacao",  user.pontuacao+ perguntaSearch.valorDaPontuacao).where("cpf", id).then(() => console.log('Pontuação registrada com sucesso!'))
+            .catch((err) => console.error(err));
+            const respostaSearch = await connection("PerguntasRespondidas").select("*").where(alunoId, perguntaId).first();
+            res.json({
+              message: "Atualizado com sucesso.",
+              resposta:respostaSearch
+
+            
+            })
+          } 
+
+        }
+         connection.destroy;
       } catch (error) {
         res.json({message: "Error"})
         console.log(error)
-      }
-      
+      }    
       
       }
 }

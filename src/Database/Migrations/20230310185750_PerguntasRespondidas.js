@@ -9,6 +9,7 @@ exports.up = function(knex) {
         table.string('respostaEscolhida').notNullable();
         table.string('alunoId').notNullable();
         table.string('professorId').notNullable();
+        table.integer('pontosObtidos').defaultTo(0);
        
         table.foreign('perguntaId').references('id').inTable('Pergunta').onDelete("CASCADE");
         table.foreign('alunoId').references('cpf').inTable('User').onDelete("CASCADE");

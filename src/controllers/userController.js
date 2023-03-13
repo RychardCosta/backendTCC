@@ -50,10 +50,15 @@ module.exports = {
             const user = await connection("User").select("*").where("cpf", userId).first();
             const {cpf, nome, sobrenome, tipoDeConta, pontuacao, professorId } = user;
             const alunoSearch = await connection("User").select("cpf", "nome", "sobrenome", "tipoDeConta", "pontuacao", "professorId").where("professorId", userId);
+            const categoriaSearch = await connection("Categoria").select("*").where("professorId", userId);
+            const perguntaSearch = await connection("Pergunta").select("*").where("professorId", userId);
+
             res.json({
                 Usuario: {
                 cpf, nome, sobrenome, tipoDeConta, pontuacao, professorId},
-                alunos: alunoSearch
+                alunos: alunoSearch,
+                categorias: categoriaSearch,
+                perguntas: perguntaSearch
               })
           
               
@@ -115,33 +120,6 @@ module.exports = {
        
       
       },
-      async pontuar(req, res){
-        const {id } = req.params;
-        const {pontuacao} = req.body
-      
-        const user = await connection("User").select("*").where("cpf", id).first();
-        if(!user){
-          res.json({
-            message: "Usuário nçao encontrado!"})
-        }else{
-          try {
-            await connection("User").update("pontuacao",  user.pontuacao+pontuacao ).where("cpf", id);
-            res.json({
-              message: "Atualizado com sucesso"
-            })
-            
-          } catch (error) {
-            console.log(error)
-            res.json({
-              message: "Erro ao atualizar."
-            })
-          }
-         
-          
-        }
-        connection.destroy;
-
-      }
 
 }
 

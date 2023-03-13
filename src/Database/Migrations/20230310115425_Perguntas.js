@@ -11,6 +11,7 @@ exports.up = function(knex) {
         table.string('opcao3').notNullable();
         table.string('opcao4').notNullable();
         table.string('resposta').notNullable();
+        table.integer('valorDaPontuacao').defaultTo(10);
         table.string('categoriaID').notNullable();
         table.string('professorId').notNullable();
 

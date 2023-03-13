@@ -18,9 +18,9 @@ routes.post('/login', User.login);
 routes.post('/signup', User.create);
 routes.post('/categoria', Categoria.create);
 routes.post('/pergunta', Pergunta.create);
-routes.post('/responderPergunta', Pergunta.responderPergunta);
+routes.post('/responderPergunta/:perguntaId', Pergunta.responderPergunta);
 
-routes.put('/user/pontuar/:id', User.pontuar)
+
 
 
 
