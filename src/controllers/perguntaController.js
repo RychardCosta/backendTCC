@@ -160,20 +160,20 @@ module.exports = {
           if(searchPerguntasFiltradas.length  === 0){
             const perguntas = await connection("Pergunta").select("*").where({professorId});
           
-            res.json({message: "Todas as perguntas já foram respondidas. As novas respostas não irão gerar pontuação até ser criadas novas perguntas", perguntas:shuffleArray(perguntas)})
+            res.json({message: "Todas as perguntas já foram respondidas. Perguntas a seguir não valendo pontuação", perguntas:shuffleArray(perguntas)})
          
 
           }else{
 
 
-            res.json({message: "Perguntas geradas com sucesso.", perguntas:shuffleArray(searchPerguntasFiltradas)})        
+            res.json({message: "Perguntas valendo pontuação.", perguntas:shuffleArray(searchPerguntasFiltradas)})        
           }
 
           
         }else{
           const perguntas = await connection("Pergunta").select("*").where({professorId});
           
-          res.json({message: "Perguntas geradas com sucesso.", perguntas:shuffleArray(perguntas)})
+          res.json({message: "Perguntas valendo pontuação.", perguntas:shuffleArray(perguntas)})
 
 
         }
