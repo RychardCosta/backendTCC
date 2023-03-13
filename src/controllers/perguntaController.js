@@ -154,14 +154,26 @@ module.exports = {
             arrayId.push(pergunta.perguntaId)
            
           }
+       
           const searchPerguntasFiltradas = await connection("Pergunta").select("*").whereNotIn("id", arrayId)
 
+          if(searchPerguntasFiltradas.length  === 0){
+            const perguntas = await connection("Pergunta").select("*").where({professorId});
+          
+            res.json({message: "Todas as perguntas já foram respondidas. As novas respostas não irão gerar pontuação até ser criadas novas perguntas", perguntas:shuffleArray(perguntas)})
+         
 
-          res.json({message: "Perguntas geradas com sucesso", perguntas:shuffleArray(searchPerguntasFiltradas)})        
+          }else{
+
+
+            res.json({message: "Perguntas geradas com sucesso.", perguntas:shuffleArray(searchPerguntasFiltradas)})        
+          }
+
+          
         }else{
           const perguntas = await connection("Pergunta").select("*").where({professorId});
           
-          res.json({message: "Perguntas geradas com sucesso", perguntas:shuffleArray(perguntas)})
+          res.json({message: "Perguntas geradas com sucesso.", perguntas:shuffleArray(perguntas)})
 
 
         }
