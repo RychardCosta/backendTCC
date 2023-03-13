@@ -8,7 +8,7 @@ exports.up = function(knex) {
         table.string('nome').notNullable();
         table.string('sobrenome').notNullable();
         table.string('senha').notNullable();
-        table.string('tipoDeConta').notNullable();
+        table.string('tipoDeConta').defaultTo("aluno");
         table.integer("pontuacao").defaultTo(0);
         table.string('professorId');
 

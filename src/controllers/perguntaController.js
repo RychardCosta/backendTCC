@@ -113,6 +113,15 @@ module.exports = {
             
             })
           } else{
+            await connection('PerguntasRespondidas').insert({
+              perguntaId,
+              respostaEscolhida,
+              alunoId,
+              "professorId": user.professorId,
+              "pontosObtidos": 0
+  
+              }).then(() => console.log('Log de resposta cadastrado com sucesso!'))
+           .catch((err) => console.error(err))
             res.json({
               message: "Resposta errada!."
 
@@ -128,5 +137,52 @@ module.exports = {
         console.log(error)
       }    
       
+      },
+      async gerar(req, res){
+        const {professorId} = req.params;
+        const {verificarPerguntasRepetidas, alunoId} = req.query;
+
+        
+
+        if(verificarPerguntasRepetidas === "true" && alunoId){
+          const perguntasRespondidasSearch = await connection("PerguntasRespondidas").select("*").where({alunoId}).whereNot("pontosObtidos", 0);
+         
+          const arrayId = []
+          
+                   
+          for(pergunta of perguntasRespondidasSearch){
+            arrayId.push(pergunta.perguntaId)
+           
+          }
+          const search = await connection("Pergunta").select("*").whereNotIn("id", arrayId)
+
+
+          res.json({message: "Perguntas geradas com sucesso", perguntas:search})        
+        }else{
+          const perguntas = await connection("Pergunta").select("*").where({professorId});
+          
+          res.json({message: "Perguntas geradas com sucesso", perguntas:shuffleArray(perguntas)})
+
+
+        }
+
+
+
+
+        function shuffleArray(arr) {
+          // Loop em todos os elementos
+      for (let i = arr.length - 1; i > 0; i--) {
+              // Escolhendo elemento aleatório
+          const j = Math.floor(Math.random() * (i + 1));
+          // Reposicionando elemento
+          [arr[i], arr[j]] = [arr[j], arr[i]];
+      }
+      // Retornando array com aleatoriedade
+      return arr;
+  }
+
+  function itensUnicos(arr) {
+    return arr.filter((v, i, a) => a.indexOf(v) === i)
+}
       }
 }

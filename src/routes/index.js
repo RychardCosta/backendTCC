@@ -8,11 +8,15 @@ const Pergunta = require("../controllers/perguntaController");
 
 
 const routes = Router();
+routes.get("/", (req, res) => {
+    res.json({message: "Bem-vindo a API.",data:"Esta API é referente ao trabalho de TCC da universidade UNICESUMAR."})
+})
 routes.get('/user/:userId', User.index)
   
 
 routes.get('/categoria/', Categoria.index);
 routes.get('/pergunta/:professorId', Pergunta.index);
+routes.get('/pergunta/gerar/:professorId', Pergunta.gerar);
 
 routes.post('/login', User.login);
 routes.post('/signup', User.create);
