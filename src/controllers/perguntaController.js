@@ -48,9 +48,7 @@ module.exports = {
       async index(req, res) {
         const {professorId} = req.params;
         const {id} = req.query;
-        console.log(professorId)
-        console.log(id)
-      
+        
         try {
           if(id){
             const perguntaSearch = await connection("Pergunta").select("*").where({"id": id, "professorId": professorId});
@@ -142,44 +140,39 @@ module.exports = {
         const {professorId} = req.params;
         const {verificarPerguntasRepetidas, alunoId} = req.query;
 
-        
 
-        if(verificarPerguntasRepetidas === "true" && alunoId){
-          const perguntasRespondidasSearch = await connection("PerguntasRespondidas").select("*").where({alunoId}).whereNot("pontosObtidos", 0);
+        try {
+          if(verificarPerguntasRepetidas === "true" && alunoId){
+            const perguntasRespondidasSearch = await connection("PerguntasRespondidas").select("*").where({alunoId}).whereNot("pontosObtidos", 0);
          
-          const arrayId = []
+             const arrayId = []
           
                    
-          for(pergunta of perguntasRespondidasSearch){
+            for(pergunta of perguntasRespondidasSearch){
             arrayId.push(pergunta.perguntaId)
            
-          }
+             }
        
-          const searchPerguntasFiltradas = await connection("Pergunta").select("*").whereNotIn("id", arrayId)
+            const searchPerguntasFiltradas = await connection("Pergunta").select("*").whereNotIn("id", arrayId)
 
-          if(searchPerguntasFiltradas.length  === 0){
+            if(searchPerguntasFiltradas.length  === 0){
             const perguntas = await connection("Pergunta").select("*").where({professorId});
-          
-            res.json({message: "Todas as perguntas já foram respondidas. Perguntas a seguir não valendo pontuação", perguntas:shuffleArray(perguntas)})
-         
-
-          }else{
-
-
-            res.json({message: "Perguntas valendo pontuação.", perguntas:shuffleArray(searchPerguntasFiltradas)})        
-          }
-
-          
+       
+             res.json({message: "Todas as perguntas já foram respondidas. Perguntas a seguir não valendo pontuação", perguntas:shuffleArray(perguntas)})
+        
+            }else{
+             res.json({message: "Perguntas valendo pontuação.", perguntas:shuffleArray(searchPerguntasFiltradas)})        
+           }
         }else{
           const perguntas = await connection("Pergunta").select("*").where({professorId});
           
           res.json({message: "Perguntas valendo pontuação.", perguntas:shuffleArray(perguntas)})
-
-
+        }      
+          } catch (error) {
+          res.json({message: "error"})
+          console.log(error)
+          
         }
-
-
-
 
         function shuffleArray(arr) {
           // Loop em todos os elementos

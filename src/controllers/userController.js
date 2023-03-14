@@ -5,8 +5,9 @@ module.exports = {
 
     async login (req, res) {
         const {cpf, senha}= req.body;
-       
+
         try {
+              try {
           const user = await connection("User").select("*").where("cpf", cpf).first();
          
       
@@ -40,7 +41,14 @@ module.exports = {
                 user: cpf,
                 pass: senha
           })
-        }        
+        } 
+
+          
+          
+        } catch (error) {
+          console.log(error);
+          res.json({message: "error"})          
+        }  
       },
       async index(req, res) {
         const {userId } = req.params;
@@ -72,7 +80,9 @@ module.exports = {
       }},
       async create(req, res)  {
         const {cpf, nome, sobrenome,tipoDeConta, senha, professorId } = req.body;
-      
+
+        try {
+            
         const user = await connection("User").select("*").where("cpf", cpf).first();
         if(user){
           res.json({
@@ -123,8 +133,13 @@ module.exports = {
           
         }
         connection.destroy;
-       
-      
+
+          
+        } catch (error) {
+          console.log(error);
+          res.json({message: "error"});
+          
+        }
       },
 
 }
