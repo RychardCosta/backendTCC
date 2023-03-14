@@ -104,6 +104,12 @@ module.exports = {
                res.json({
                  message: "Verifique o CPF"
                })})
+
+               await connection("Categoria").insert({
+                categoria: "Geral",
+                professorId: cpf
+              }).then(() => console.log('Categoria inserida com sucesso!'))
+              .catch((err) => console.error(err))
                
              res.json({
                message: "Usuário criado com sucesso",

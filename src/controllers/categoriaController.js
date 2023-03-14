@@ -7,7 +7,7 @@ module.exports = {
           const categoriaDB = await connection("Categoria").select("*").where({"categoria": categoria,"professorId": professorId}).first();
         if(categoriaDB){
           res.json({
-            message: "Categoria já cadastrado!"
+            message: "Categoria já cadastrada!"
           })
         }else{
           const newCategoria = await connection("Categoria").insert({
@@ -17,7 +17,7 @@ module.exports = {
           .catch((err) => console.error(err))
           const categoriaSearch = await connection("Categoria").select("*").where("categoria", categoria).first();
           res.json({
-            message: "Categoria criado com sucesso",
+            message: "Categoria criada com sucesso.",
             id: categoriaSearch.id,
             categoria,
             professorId     
@@ -33,7 +33,8 @@ module.exports = {
         }      
       },
       async index(req, res) {
-        const {nomeDaCategoria  , professorId} = req.query;
+        const { professorId} = req.params;
+        const {nomeDaCategoria} = req.query;
       
       try {
         if(nomeDaCategoria){

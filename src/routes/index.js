@@ -14,7 +14,7 @@ routes.get("/", (req, res) => {
 routes.get('/user/:userId', User.index)
   
 
-routes.get('/categoria/', Categoria.index);
+routes.get('/categoria/:professorId', Categoria.index);
 routes.get('/pergunta/:professorId', Pergunta.index);
 routes.get('/pergunta/gerar/:professorId', Pergunta.gerar);
 
