@@ -140,16 +140,16 @@ module.exports = {
         const {professorId} = req.params;
         const {verificarPerguntasRepetidas, alunoId} = req.query;
 
-
-        try {
+      
           if(verificarPerguntasRepetidas === "true" && alunoId){
-            const perguntasRespondidasSearch = await connection("PerguntasRespondidas").select("*").where({alunoId}).whereNot("pontosObtidos", 0);
+            const perguntasRespondidasSearch = await connection("PerguntasRespondidas").select("*").where("alunoId", alunoId);
          
              const arrayId = []
-          
+            console.log(perguntasRespondidasSearch)
                    
             for(pergunta of perguntasRespondidasSearch){
             arrayId.push(pergunta.perguntaId)
+            console.log(pergunta.perguntaId)
            
              }
        
@@ -168,11 +168,7 @@ module.exports = {
           
           res.json({message: "Perguntas valendo pontuação.", perguntas:shuffleArray(perguntas)})
         }      
-          } catch (error) {
-          res.json({message: "error"})
-          console.log(error)
           
-        }
 
         function shuffleArray(arr) {
           // Loop em todos os elementos
