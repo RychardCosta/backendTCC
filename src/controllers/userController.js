@@ -52,22 +52,36 @@ module.exports = {
       },
       async index(req, res) {
         const {userId } = req.params;
-        
-      
+            
         try {
             const user = await connection("User").select("*").where("cpf", userId).first();
             const {cpf, nome, sobrenome, tipoDeConta, pontuacao, professorId } = user;
             const alunoSearch = await connection("User").select("cpf", "nome", "sobrenome", "tipoDeConta", "pontuacao", "professorId").where("professorId", userId);
             const categoriaSearch = await connection("Categoria").select("*").where("professorId", userId);
             const perguntaSearch = await connection("Pergunta").select("*").where("professorId", userId);
-
-            res.json({
+            
+            if(tipoDeConta === "professor"){
+              
+              res.json({
+                Usuario: {
+                  cpf, nome, sobrenome, tipoDeConta, pontuacao, professorId},
+                  alunos: alunoSearch,
+                  categorias: categoriaSearch,
+                  perguntas: perguntaSearch
+                })
+                
+                
+              }else{
+              const perguntaRespondidaSearch = await connection("PerguntasRespondidas").select("*").where("alunoId", userId);
+              res.json({
                 Usuario: {
                 cpf, nome, sobrenome, tipoDeConta, pontuacao, professorId},
-                alunos: alunoSearch,
-                categorias: categoriaSearch,
-                perguntas: perguntaSearch
+                perguntaRespondidaSearch
+              
+                
               })
+            }
+
           
               
           }catch(error){
@@ -77,6 +91,8 @@ module.exports = {
 
           })
 
+
+        
       }},
       async create(req, res)  {
         const {cpf, nome, sobrenome,tipoDeConta, senha, professorId } = req.body;

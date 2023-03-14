@@ -77,14 +77,15 @@ module.exports = {
         const {respostaEscolhida, alunoId} = req.body;
         try {
         const perguntaSearch = await connection("Pergunta").select("*").where("id",perguntaId ).first();
+        const perguntaRespondidaSearch = await connection("PerguntasRespondidas").select("*").where("perguntaId",perguntaId ).andWhere("pontosObtidos", ">", "0");
         const user = await connection("User").select("*").where("cpf", alunoId).first();
-       
-
-          if(!user){
+      
+                
+        if(!user){
           res.json({
             message: "Usuário não encontrado!"})
-        }else{
-      
+          }else{
+            
           if(respostaEscolhida === perguntaSearch.resposta){
             console.log(respostaEscolhida)
             console.log(perguntaSearch.resposta)
@@ -94,15 +95,24 @@ module.exports = {
               alunoId,
               "professorId": user.professorId,
               "pontosObtidos": perguntaSearch.valorDaPontuacao
-  
-              }).then(() => console.log('Log de resposta cadastrado com sucesso!'))
-           .catch((err) => console.error(err))
-          
-            await connection("User").update("pontuacao",  user.pontuacao + perguntaSearch.valorDaPontuacao).where("cpf", user.cpf).then(() => console.log('Pontuação registrada com sucesso!'))
-            .catch((err) => console.error(err));
+              
+            }).then(() => console.log('Log de resposta cadastrado com sucesso!'))
+            .catch((err) => console.error(err))
+
             const respostaSearch = await connection("PerguntasRespondidas").select("*").where({alunoId, perguntaId}).first();
+            
+            if(perguntaRespondidaSearch.length === 0){
+                   
+              await connection("User").update("pontuacao",  user.pontuacao + perguntaSearch.valorDaPontuacao).where("cpf", user.cpf).then(() => console.log(`Pontuação registrada com sucesso: ${user.pontuacao + perguntaSearch.valorDaPontuacao}`))
+              .catch((err) => console.error(err));
+              
+            }else{
 
+              await connection("User").update("pontuacao",  0).where("cpf", user.cpf).then(() => console.log(`Pontuação registrada com sucesso: ${0}`))
+              .catch((err) => console.error(err));
+      
 
+            }
 
             res.json({
               message: "Resposta certa!",
@@ -182,8 +192,6 @@ module.exports = {
       return arr;
   }
 
-  function itensUnicos(arr) {
-    return arr.filter((v, i, a) => a.indexOf(v) === i)
-}
+
       }
 }
