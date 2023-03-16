@@ -81,7 +81,7 @@ module.exports = {
         const perguntaSearch = await connection("Pergunta").select("*").where("id",perguntaId ).first();
         const perguntaRespondidaSearch = await connection("PerguntasRespondidas").select("*").where("perguntaId",perguntaId ).andWhere("pontosObtidos", ">", "0");
         const user = await connection("User").select("*").where("cpf", alunoId).first();
-      
+      console.log(perguntaSearch)
                 
         if(!user){
           res.json({
@@ -170,15 +170,18 @@ module.exports = {
             if(searchPerguntasFiltradas.length  === 0){
             const perguntas = await connection("Pergunta").select("*").where({professorId});
        
-             res.json({message: "Todas as perguntas já foram respondidas. Perguntas a seguir não valendo pontuação", perguntas:shuffleArray(perguntas)})
-        
+             res.json({message: "Todas as perguntas já foram respondidas. Pergunta a seguir não valendo pontuação", perguntas:shuffleArray(perguntas)})
+             console.log("PErguntas geradas com sucesso")
+             
             }else{
-             res.json({message: "Perguntas valendo pontuação.", perguntas:shuffleArray(searchPerguntasFiltradas)})        
-           }
-        }else{
-          const perguntas = await connection("Pergunta").select("*").where({professorId});
-          
-          res.json({message: "Perguntas valendo pontuação.", perguntas:shuffleArray(perguntas)})
+              res.json({message: "Pergunta valendo pontuação.", perguntas:shuffleArray(searchPerguntasFiltradas)})        
+              console.log("PErguntas geradas com sucesso")
+            }
+          }else{
+            const perguntas = await connection("Pergunta").select("*").where({professorId});
+            
+            res.json({message: "Pergunta valendo pontuação.", perguntas:shuffleArray(perguntas)})
+            console.log("PErguntas geradas com sucesso")
         }      
           
 
