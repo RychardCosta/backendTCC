@@ -132,7 +132,7 @@ module.exports = {
                })})
 
                await connection("Categoria").insert({
-                categoria: "Geral",
+                categoria: "GERAL",
                 professorId: cpf
               }).then(() => console.log('Categoria inserida com sucesso!'))
               .catch((err) => console.error(err))

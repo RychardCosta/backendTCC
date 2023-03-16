@@ -35,10 +35,11 @@ module.exports = {
       async index(req, res) {
         const { professorId} = req.params;
         const {nomeDaCategoria} = req.query;
+        console.log(nomeDaCategoria)
       
       try {
         if(nomeDaCategoria){
-          const newCategoriaDB = await connection("Categoria").select("*").where({"categoria": nomeDaCategoria, "professorId": professorId}).first();
+          const newCategoriaDB = await connection("Categoria").select("*").where({"categoria": nomeDaCategoria.toUpperCase(), "professorId": professorId}).first();
         
         res.json({
          categoria: newCategoriaDB

@@ -3,9 +3,11 @@ const connection = require('..//Database/connection');
 
 module.exports = {
     async create(req, res) {
-        const {pergunta, resposta,categoriaId, professorId, opcao1, opcao2, opcao3, opcao4} = req.body;
-            
+        const {pergunta, resposta, categoriaName, professorId, opcao1, opcao2, opcao3, opcao4} = req.body;
+            console.log(categoriaName.toUpperCase())
         try {
+          const  categoriaId= await connection("Categoria").select("*").where({professorId}).andWhere("categoria", categoriaName.toUpperCase()).first();
+          console.log(categoriaId)
           const perguntaDB = await connection("Pergunta").select("*").where({"pergunta":pergunta, "professorId": professorId}).first();
           if(perguntaDB){
             res.json({
@@ -16,7 +18,7 @@ module.exports = {
           const newPergunta = connection('Pergunta').insert({
              pergunta,
              resposta ,
-             categoriaId,
+             categoriaId: categoriaId.id,
              professorId,
              opcao1, 
              opcao2, 
