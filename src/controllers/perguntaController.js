@@ -77,11 +77,12 @@ module.exports = {
       async responderPergunta(req, res) {
         const {perguntaId} = req.params;
         const {respostaEscolhida, alunoId} = req.body;
+
         try {
         const perguntaSearch = await connection("Pergunta").select("*").where("id",perguntaId ).first();
-        const perguntaRespondidaSearch = await connection("PerguntasRespondidas").select("*").where("perguntaId",perguntaId ).andWhere("pontosObtidos", ">", "0");
+        const perguntaRespondidaSearch = await connection("PerguntasRespondidas").select("*").where({"perguntaId": perguntaId, "alunoId": alunoId}).andWhere("pontosObtidos", ">", "0");
         const user = await connection("User").select("*").where("cpf", alunoId).first();
-      console.log(perguntaSearch)
+      console.log(perguntaRespondidaSearch)
                 
         if(!user){
           res.json({
@@ -89,8 +90,7 @@ module.exports = {
           }else{
             
           if(respostaEscolhida === perguntaSearch.resposta){
-            console.log(respostaEscolhida)
-            console.log(perguntaSearch.resposta)
+          
              await connection('PerguntasRespondidas').insert({
               perguntaId,
               respostaEscolhida,
@@ -109,10 +109,8 @@ module.exports = {
               .catch((err) => console.error(err));
               
             }else{
+              console.log("Sem atualização")
 
-              await connection("User").update("pontuacao",  0).where("cpf", user.cpf).then(() => console.log(`Pontuação registrada com sucesso: ${0}`))
-              .catch((err) => console.error(err));
-      
 
             }
 
