@@ -155,7 +155,8 @@ module.exports = {
       
           if(verificarPerguntasRepetidas === "true" && alunoId){
             console.log("Verificar perrgunta")
-            const perguntasRespondidasSearch = await connection("PerguntasRespondidas").select("*").where("alunoId", alunoId);
+            const perguntasRespondidasSearch = await connection("PerguntasRespondidas").select("*").where("alunoId", alunoId).whereNot("pontosObtidos", 0);
+            console.log(perguntasRespondidasSearch)
          
              const arrayId = []
             console.log(perguntasRespondidasSearch)
