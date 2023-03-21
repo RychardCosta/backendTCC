@@ -158,6 +158,56 @@ module.exports = {
           
         }
       },
+      async update(req, res) {
+        const {userId} = req.params;
+        const {nome, sobrenome, senha} = req.body;
+
+
+        try {
+          const user = await  connection("User").select("*").where("cpf", userId)
+          console.log(user)
+          if(user.length > 0){
+            if(nome){
+              try {
+                await connection("User").update("nome", nome).where("cpf", userId)              
+              } catch (error) {
+                console.log(error)
+                res.json({message: 'Error.'})
+              }
+            }
+            if(sobrenome){
+              try {
+                await connection("User").update("sobrenome", sobrenome).where("cpf", userId)              
+              } catch (error) {
+                console.log(error)
+                res.json({message: 'Error.'})
+              }
+            }
+            if(senha){
+              try {
+                await connection("User").update("senha", senha).where("cpf", userId)              
+              } catch (error) {
+                console.log(error)
+                res.json({message: 'Error.'})
+              }
+            }
+    
+            res.send("Ok")
+
+          }else{
+            res.json({message: 'Usuário não encontrado.'})
+          }
+
+         
+        } catch (error) {
+          console.log(error)
+          res.json({message: 'Error.'})
+          
+        }
+
+
+      }
 
 }
 
+  
