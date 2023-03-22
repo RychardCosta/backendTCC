@@ -25,6 +25,8 @@ routes.post('/pergunta', Pergunta.create);
 routes.post('/responderPergunta/:perguntaId', Pergunta.responderPergunta);
 
 routes.put('/user/:userId', User.update)
+routes.put('/categoria/', Categoria.update)
+routes.put('/pergunta/:perguntaId', Pergunta.update)
 
 
 

@@ -63,6 +63,34 @@ module.exports = {
         
       }
       
-      }
+      },
+       async update(req, res){
+        const {nomeDaCategoria, novaCategoria} = req.body;
+
+        try {
+          const hasCategoria = await connection("Categoria").where("categoria", nomeDaCategoria);
+          console.log(hasCategoria)
+        if(!hasCategoria){
+          console.log("Aqui")
+          await connection("Categoria").update("categoria", novaCategoria).where("categoria", nomeDaCategoria)
+          res.json({message: "Ok"})
+
+        }else{
+          console.log("nao atualizou")
+          res.json({message: "Categoria já cadastrada"})
+        }
+          
+        } catch (error) {
+          console.log(error)
+          res.json({message: "Error."})
+          
+        }
+        
+        
+        
+
+        
+
+       }
 
 }
