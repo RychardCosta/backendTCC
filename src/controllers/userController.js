@@ -206,6 +206,21 @@ module.exports = {
         }
 
 
+      },
+      async delete(req, res){
+      const {userId} = req.params;
+        try {
+          await connection("User").where("cpf", userId).del()
+          await connection("User").where("professorId", userId).del()
+          await connection("Categoria").where("professorId", userId).del()
+          await connection("Pergunta").where("professorId", userId).del()
+          res.json({message: "Excluido"})
+          
+        } catch (error) {
+          console.log(error)
+          res.json({message: "error"})
+        }
+
       }
 
 }

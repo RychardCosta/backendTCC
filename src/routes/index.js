@@ -29,6 +29,9 @@ routes.put('/categoria/', Categoria.update)
 routes.put('/pergunta/:perguntaId', Pergunta.update)
 
 
+routes.delete('/user/:userId', User.delete)
+routes.delete('/categoria/:categoriaId', Categoria.delete)
+routes.delete('/user/:perguntaId', Pergunta.delete)
 
 
 

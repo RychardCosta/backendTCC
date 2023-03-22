@@ -136,8 +136,7 @@ module.exports = {
               .where("cpf", user.cpf)
               .then(() =>
                 console.log(
-                  `Pontuação registrada com sucesso: ${
-                    user.pontuacao + perguntaSearch.valorDaPontuacao
+                  `Pontuação registrada com sucesso: ${user.pontuacao + perguntaSearch.valorDaPontuacao
                   }`
                 )
               )
@@ -265,61 +264,75 @@ module.exports = {
     let message;
     console.log(newCategoria)
 
-    
+
     try {
       const pergunta = await connection("Pergunta")
-      .select("*")
-      .where("pergunta", novaPergunta);
-      
-    if (pergunta.length === 0) {
-      await connection("Pergunta")
-        .update("pergunta", novaPergunta)
-        .where("id", perguntaId);
-      console.log("Pergunta");}else{
-        message= "Pergunta já cadastrada" 
-      }
-      
-      
-          if (newCategoria) {
-            const categoria = await connection("Categoria")
-              .where("categoria", newCategoria)
-              .first();
-            await connection("Pergunta")
-              .update("categoriaId", categoria.id)
-              .where("id", perguntaId);
-            console.log(categoria.id);
-          }
-          if (novaResposta) {
-            await connection("Pergunta")
-              .update("resposta", novaResposta)
-              .where("id", perguntaId);
-          }
-          if (novaOpcao1) {
-            await connection("Pergunta")
-              .update("opcao1", novaOpcao1)
-              .where("id", perguntaId);
-          }
-          if (novaOpcao2) {
-            await connection("Pergunta")
-              .update("opcao2", novaOpcao2)
-              .where("id", perguntaId);
-          }
-          if (novaOpcao3) {
-            await connection("Pergunta")
-              .update("opcao3", novaOpcao3)
-              .where("id", perguntaId);
-          }
-          if (novaOpcao4) {
-            await connection("Pergunta")
-              .update("opcao4", novaOpcao4)
-              .where("id", perguntaId);
-          }
+        .select("*")
+        .where("pergunta", novaPergunta);
 
-        
-      res.json({ message: message? message: "Ok"});
+      if (pergunta.length === 0) {
+        await connection("Pergunta")
+          .update("pergunta", novaPergunta)
+          .where("id", perguntaId);
+        console.log("Pergunta");
+      } else {
+        message = "Pergunta já cadastrada"
+      }
+
+
+      if (newCategoria) {
+        const categoria = await connection("Categoria")
+          .where("categoria", newCategoria)
+          .first();
+        await connection("Pergunta")
+          .update("categoriaId", categoria.id)
+          .where("id", perguntaId);
+        console.log(categoria.id);
+      }
+      if (novaResposta) {
+        await connection("Pergunta")
+          .update("resposta", novaResposta)
+          .where("id", perguntaId);
+      }
+      if (novaOpcao1) {
+        await connection("Pergunta")
+          .update("opcao1", novaOpcao1)
+          .where("id", perguntaId);
+      }
+      if (novaOpcao2) {
+        await connection("Pergunta")
+          .update("opcao2", novaOpcao2)
+          .where("id", perguntaId);
+      }
+      if (novaOpcao3) {
+        await connection("Pergunta")
+          .update("opcao3", novaOpcao3)
+          .where("id", perguntaId);
+      }
+      if (novaOpcao4) {
+        await connection("Pergunta")
+          .update("opcao4", novaOpcao4)
+          .where("id", perguntaId);
+      }
+
+
+      res.json({ message: message ? message : "Ok" });
     } catch (error) {
       console.log(error);
       res.json({ message: "Error" });
     }
   },
+  async delete(req, res) {
+    const { perguntaId } = req.params;
+    const { userId } = req.query;
+    try {
+      await connection("Pergunta").where({ "categoriaID": categoriaId, "professorID": userId }).del()
+      res.json({ message: "Excluido" })
+
+    } catch (error) {
+      console.log(error)
+      res.json({ message: "error" })
+    }
+
+  }
 };
