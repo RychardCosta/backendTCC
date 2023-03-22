@@ -325,8 +325,9 @@ module.exports = {
   async delete(req, res) {
     const { perguntaId } = req.params;
     const { userId } = req.query;
+    console.log(perguntaId)
     try {
-      await connection("Pergunta").where({ "categoriaID": categoriaId, "professorID": userId }).del()
+      await connection("Pergunta").where({ "professorID": userId, "id": perguntaId }).del()
       res.json({ message: "Excluido" })
 
     } catch (error) {

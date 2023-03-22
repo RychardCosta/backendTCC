@@ -93,11 +93,14 @@ module.exports = {
 
        },
        async delete(req, res){
-        const {categoriaId} = req.params;
+        const {nomeDaCategoria} = req.params;
         const {userId} = req.query;
           try {
-            await connection("Categoria").where({"id":categoriaId, "professorId": userId}).del()
-            await connection("Pergunta").where({"categoriaID": categoriaId ,"professorID": userId}).del()
+            const categoria = await connection("Categoria")
+            .where("categoria", nomeDaCategoria)
+            .first();
+            await connection("Categoria").where({"id":categoria.id, "professorId": userId}).del()
+            await connection("Pergunta").where({"categoriaID": categoria.id ,"professorID": userId}).del()
             res.json({message: "Excluido"})
             
           } catch (error) {

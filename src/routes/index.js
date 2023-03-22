@@ -30,8 +30,8 @@ routes.put('/pergunta/:perguntaId', Pergunta.update)
 
 
 routes.delete('/user/:userId', User.delete)
-routes.delete('/categoria/:categoriaId', Categoria.delete)
-routes.delete('/user/:perguntaId', Pergunta.delete)
+routes.delete('/categoria/:nomeDaCategoria', Categoria.delete)
+routes.delete('/pergunta/:perguntaId', Pergunta.delete)
 
 
 
