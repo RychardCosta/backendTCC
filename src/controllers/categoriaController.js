@@ -68,9 +68,9 @@ module.exports = {
         const {nomeDaCategoria, novaCategoria} = req.body;
 
         try {
-          const hasCategoria = await connection("Categoria").where("categoria", nomeDaCategoria);
+          const hasCategoria = await connection("Categoria").where("categoria", novaCategoria);
           console.log(hasCategoria)
-        if(!hasCategoria){
+        if(hasCategoria.length === 0){
           console.log("Aqui")
           await connection("Categoria").update("categoria", novaCategoria).where("categoria", nomeDaCategoria)
           res.json({message: "Ok"})
