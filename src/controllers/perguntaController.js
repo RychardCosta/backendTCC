@@ -262,20 +262,24 @@ module.exports = {
       novaOpcao3,
       novaOpcao4,
     } = req.body;
-
+    let message;
     console.log(newCategoria)
 
+    
     try {
       const pergunta = await connection("Pergunta")
-          .select("*")
-          .where("pergunta", novaPergunta);
-          
-        if (pergunta.length === 0) {
-          await connection("Pergunta")
-            .update("pergunta", novaPergunta)
-            .where("id", perguntaId);
-          console.log("Pergunta");
-
+      .select("*")
+      .where("pergunta", novaPergunta);
+      
+    if (pergunta.length === 0) {
+      await connection("Pergunta")
+        .update("pergunta", novaPergunta)
+        .where("id", perguntaId);
+      console.log("Pergunta");}else{
+        message= "Pergunta já cadastrada" 
+      }
+      
+      
           if (newCategoria) {
             const categoria = await connection("Categoria")
               .where("categoria", newCategoria)
@@ -311,11 +315,11 @@ module.exports = {
               .where("id", perguntaId);
           }
 
-        } 
-      res.json({ message: "Ok" });
+        
+      res.json({ message: message? message: "Ok"});
     } catch (error) {
       console.log(error);
-      res.json({ message: "Pergunta já cadastrada" });
+      res.json({ message: "Error" });
     }
   },
 };
