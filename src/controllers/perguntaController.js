@@ -263,12 +263,13 @@ module.exports = {
       novaOpcao4,
     } = req.body;
 
+    console.log(newCategoria)
+
     try {
-      if (novaPergunta) {
-        const pergunta = await connection("Pergunta")
+      const pergunta = await connection("Pergunta")
           .select("*")
           .where("pergunta", novaPergunta);
-
+          
         if (pergunta.length === 0) {
           await connection("Pergunta")
             .update("pergunta", novaPergunta)
@@ -310,13 +311,11 @@ module.exports = {
               .where("id", perguntaId);
           }
 
-          res.json({ message: "Ok" });
-        } else {
-          res.json({ message: "Pergunta já cadastrada" });
-        }
-      }
+        } 
+      res.json({ message: "Ok" });
     } catch (error) {
       console.log(error);
+      res.json({ message: "Pergunta já cadastrada" });
     }
   },
 };
