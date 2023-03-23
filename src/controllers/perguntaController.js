@@ -263,21 +263,30 @@ module.exports = {
     } = req.body;
     let message;
     console.log(newCategoria)
+    console.log(novaPergunta)
+    console.log(novaOpcao1)
+    console.log(novaOpcao2)
+    console.log(novaOpcao3)
+    console.log(novaOpcao4)
 
 
     try {
-      const pergunta = await connection("Pergunta")
+      try {
+        const pergunta = await connection("Pergunta")
         .select("*")
         .where("pergunta", novaPergunta);
-
-      if (pergunta.length === 0) {
-        await connection("Pergunta")
-          .update("pergunta", novaPergunta)
-          .where("id", perguntaId);
-        console.log("Pergunta");
-      } else {
-        message = "Pergunta já cadastrada"
+        if (pergunta.length === 0) {
+          await connection("Pergunta")
+            .update("pergunta", novaPergunta)
+            .where("id", perguntaId);
+          console.log("Pergunta");
+        } else {
+          message = "Pergunta já cadastrada"
+        }
+      } catch (error) {
+        console.log(error)
       }
+          
 
 
       if (newCategoria) {
